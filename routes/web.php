@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +23,16 @@ Route::prefix("admin")->middleware(["auth","admin"])->group(function(){
     Route::get("/users/edit/{id}",[\App\Http\Controllers\AdminController::class,'editUser'])->name('admin.user.edit');
     Route::post("/users/edit/{id}",[\App\Http\Controllers\AdminController::class,'updateUser']);
     Route::post("/users/delete/{id}",[\App\Http\Controllers\AdminController::class,'deleteUser'])->name('admin.user.delete');
+
+    Route::prefix("complaints")->group(function(){
+        Route::get("/",[\App\Http\Controllers\ComplaintController::class,'complaints'])->name('admin.complaints');
+        Route::get("/add",[\App\Http\Controllers\ComplaintController::class,'add'])->name('admin.complaint.add');
+        Route::post("/add",[\App\Http\Controllers\ComplaintController::class,'store']);
+        Route::get("/edit/{id}",[\App\Http\Controllers\ComplaintController::class,'edit'])->name('admin.complaint.edit');
+        Route::post("/edit/{id}",[\App\Http\Controllers\ComplaintController::class,'update']);
+        Route::post("/delete/{id}",[\App\Http\Controllers\ComplaintController::class,'delete'])->name('admin.complaint.delete');
+    });
+
 
 });
 
@@ -47,3 +56,20 @@ Route::middleware("auth")->group(function() {
     Route::post("update/password", [\App\Http\Controllers\HomeController::class, "updatePassword"])->name("user.update.password");
 
 });
+
+Route::get("/write/complaint",[\App\Http\Controllers\ComplaintController::class,"index"])->name("write.complaint");
+Route::post("/write/complaint",[\App\Http\Controllers\ComplaintController::class,"submitComplaint"]);
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+})->name("google.login");
+
+Route::get('login/google/callback', [\App\Http\Controllers\HomeController::class,"googleLogin"]);
+
+Route::get('/login/facebook', function () {
+    return Socialite::driver('facebook')->redirect();
+})->name("facebook.login");
+
+
+Route::get("login/facebook/callback",[\App\Http\Controllers\HomeController::class,"facebookLogin"]);
+

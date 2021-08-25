@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Socialite\Facades\Socialite;
 
 class HomeController extends Controller
 {
@@ -18,6 +19,9 @@ class HomeController extends Controller
     }
 
     public function login(){
+        if(Auth::check()){
+            return redirect(route("admin"));
+        }
         return view('front.login');
     }
 
@@ -33,6 +37,16 @@ class HomeController extends Controller
         $user['password'] = $request->get("password");
 
         $mailUser = User::where('email',$user['email'])->first();
+
+        if(!$mailUser){
+            session()->flash("error","Invalid username or password");
+            return redirect(route("login"));
+        }
+
+        if($mailUser->role == "admin"){
+            Auth::login($mailUser);
+            return redirect(route("admin"));
+        }
 
         if($mailUser->email_verified_at == null){
             session()->flash("error","Email not verified");
@@ -85,7 +99,12 @@ class HomeController extends Controller
 
     public function logout(Request $request){
         Auth::logout();
-        return route("home");
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect(route("home"));
     }
 
     public function profile(){
@@ -163,6 +182,41 @@ class HomeController extends Controller
             ('Foreks Email verification');
             $message->from('foreks@forekssikayetleri.com','Ali Sasoli');
         });
+    }
+
+    public function googleLogin(){
+        $googleUser = Socialite::driver('google')->user();
+
+        $this->registerOrLogin($googleUser);
+
+        return redirect(route("home"));
+
+    }
+
+    public function facebookLogin(){
+        $facebookUser = Socialite::driver('facebook')->user();
+
+        $this->registerOrLogin($facebookUser);
+
+        return redirect(route("home"));
+    }
+
+    private function registerOrLogin($data){
+
+        $user = User::where('email',$data->getEmail())->first();
+        if(!$user){
+            $user = new User();
+
+            $user->name = $data->getName();
+            $user->email = $data->getEmail();
+            $user->image = $data->getAvatar();
+            $user->email_verified_at = now();
+            $user->provider_id = $data->id;
+            $user->number = 03;
+            $user->save();
+        }
+
+        Auth::login($user);
     }
 }
 

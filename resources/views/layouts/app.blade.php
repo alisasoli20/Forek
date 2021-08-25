@@ -9,6 +9,7 @@
     <meta name="author" content="Ansonika">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
+
     <title>VANNO | Premium directory consumer reviews and listings template by Ansonika.</title>
 
     <!-- Favicons-->
@@ -43,8 +44,8 @@
     <form method="POST" action="{{ route("login") }}">
         @csrf
         <div class="sign-in-wrapper">
-            <a href="#0" class="social_bt facebook">Login with Facebook</a>
-            <a href="#0" class="social_bt google">Login with Google</a>
+            <a href="{{ route("facebook.login") }}" class="social_bt facebook">Login with Facebook</a>
+            <a href="{{ route("google.login") }}" class="social_bt google">Login with Google</a>
             <div class="divider"><span>Or</span></div>
             <div class="form-group">
                 <label>Email</label>
@@ -90,6 +91,15 @@
 <script src="{{ asset("public/js/common_scripts.js") }}"></script>
 <script src="{{ asset("public/js/functions.js") }}"></script>
 <script src="{{ asset("public/assets/validate.js") }}"></script>
+
+<script>
+    $(document).ready(function (){
+        $("#logout").on("click",function() {
+
+            $('#logoutForm').submit();
+        })
+    })
+</script>
 
 @yield("page-script")
 </body>

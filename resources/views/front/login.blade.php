@@ -35,7 +35,7 @@
             @csrf
             <div class="access_social">
                 <a href="#0" class="social_bt facebook">Facebook ile Kayıt Ol</a>
-                <a href="#0" class="social_bt google">Google ile Kayıt Ol</a>
+                <a href="{{ route("google.login") }}" class="social_bt google">Google ile Kayıt Ol</a>
             </div>
             <div class="divider"><span>Ya da</span></div>
             <div class="form-group">

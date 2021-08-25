@@ -8,12 +8,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Users</h1>
+                        <h1>Complaints</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Users</li>
+                            <li class="breadcrumb-item active">Complaints</li>
                         </ol>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                                         <h3 class="card-title">Users</h3>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a href="{{ route("admin.user.add") }}" class="btn btn-primary mx-auto"><i class="fa fa-plus-circle mr-2"></i>Add User</a>
+                                        <a href="{{ route("admin.complaint.add") }}" class="btn btn-primary mx-auto"><i class="fa fa-plus-circle mr-2"></i>Add User</a>
                                     </div>
                                 </div>
 
@@ -47,20 +47,22 @@
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
+                                        <th>Company Name</th>
+                                        <th>Title</th>
+                                        <th>Rating</th>
+                                        <th>Complaint By</th>
                                         <th>Changes</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($users as $user)
+                                    @foreach($complaints as $complaint)
                                     <tr>
-                                        <td>{!! $user->id !!}</td>
-                                        <td>{!! $user->name !!}</td>
-                                        <td>{!! $user->email !!}</td>
-                                        <td>{!! $user->role !!}</td>
-                                        <td><form class="form-inline" method="POST" action="{{ route("admin.user.delete",$user->id) }}">@csrf<a href="{{ route("admin.user.edit",$user->id) }}" class="btn btn-primary mr-2"><i class="fa fa-edit"></i></a><button class="btn btn-danger"><i class="fa fa-trash"></i></button></form></td>
+                                        <td>{!! $complaint->id !!}</td>
+                                        <td>{!! $complaint->company_name !!}</td>
+                                        <td>{!! $complaint->title !!}</td>
+                                        <td>{!! $complaint->rating !!}</td>
+                                        <td>{!! $complaint->user->name !!}</td>
+                                        <td><form class="form-inline" method="POST" action="{{ route("admin.complaint.delete",$complaint->id) }}">@csrf<a href="{{ route("admin.complaint.edit",$complaint->id) }}" class="btn btn-primary mr-2"><i class="fa fa-edit"></i></a><button class="btn btn-danger"><i class="fa fa-trash"></i></button></form></td>
                                     </tr>
                                     @endforeach
                                     </tbody>
@@ -70,6 +72,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Role</th>
+                                        <th>Complaint By</th>
                                         <th>Changes</th>
                                     </tr>
                                     </tfoot>
@@ -91,7 +94,7 @@
 @endsection
 @section("page-script")
     <script>
-        $("#users").addClass("active");
+        $("#complaints").addClass("active");
     </script>
     <!-- DataTables  & Plugins -->
     <script src="{{ asset("public/admin_assets/plugins/datatables/jquery.dataTables.min.js") }}"></script>
@@ -130,9 +133,9 @@
 
 @section("page-css")
     <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset("public/admin_assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("public/admin_assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("public/admin_assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("admin_assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("admin_assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("admin_assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css") }}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset("public/admin_assets/dist/css/adminlte.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("admin_assets/dist/css/adminlte.min.css") }}">
 @endsection

@@ -2,33 +2,32 @@
 
 @section('section')
     <div id="page">
-
         <header class="header menu_fixed">
             <div id="logo">
-                <a href="index.html">
+                <a href="{{ route("home") }}">
                     <img src="{{ asset("public/img/logo.png") }}" width="301" height="35" alt="" class="logo_normal">
                     <img src="{{ asset("public/img/logo-2.png") }}" width="301" height="35" alt="" class="logo_sticky">
                 </a>
             </div>
             <ul id="top_menu">
-                <li><a href="sikayet-yaz.html" class="btn_top">Şikayet Yaz</a></li>
+                <li><a href="{{ route("write.complaint") }}" class="btn_top">Şikayet Yaz</a></li>
                 <li><a href="kurumsal.html" class="btn_top company">Kurumsal Üyelik</a></li>
-                @if(auth()->check())
-                    <li>
+                <li>
+                    @if(auth()->check())
                         <div class="dropdown dropdown-user">
-                            <a href="#0" class="logged" data-toggle="dropdown"><img src="{{ asset("public/img/avatar4.jpg") }}" alt=""></a>
+                            <a href="#0" class="logged" data-toggle="dropdown"><img src="{{ (str_contains(auth()->user()->image, "https"))?auth()->user()->image: ((auth()->user()->image == null)?asset("public/img/avatar.jpg"):asset("public/storage/".auth()->user()->image)) }}" alt=""></a>
                             <div class="dropdown-menu">
                                 <ul>
                                     <li><a href="user-dashboard.html">My Reviews</a></li>
                                     <li><a href="{{ route("user.profile") }}">My Settings</a></li>
-                                    <li><a href="" id="logout">Log Out</a></li>
+                                    <li><form id="logoutForm"  method="POST" action="{{ route('logout') }}">@csrf<a  id="logout" >Log Out</a></form></li>
                                 </ul>
                             </div>
                         </div>
-                    </li>
-                @else
-                <li><a href="#sign-in-dialog" id="sign-in" class="login" title="Giriş Yap">Giriş Yap</a></li>
-                @endif
+                    @else
+                        <a href="#sign-in-dialog" id="sign-in" class="login" title="Giriş Yap">Giriş Yap</a>
+                    @endif
+                </li>
             </ul>
             <!-- /top_menu -->
             <a href="#menu" class="btn_mobile">
@@ -42,7 +41,7 @@
             <nav id="menu" class="main-menu">
                 <ul>
 
-                    <li><span><a href="{{ route("sikayetler") }}">Şikayetler</a></span>
+                    <li><span><a href="sikayetler.html">Şikayetler</a></span>
 
                     </li>
                     <li><span><a href="sirketler.html">Şirketler</a></span></li>
@@ -254,6 +253,7 @@
         </main>
         <!-- /main -->
 
+
         <footer>
             <div class="container">
                 <div class="row">
@@ -367,6 +367,7 @@
             </div>
         </footer>
         <!--/footer-->
+
     </div>
     <!-- page -->
 @endsection
@@ -376,22 +377,15 @@
     <script src="{{ asset("public/js/jquery.cookiebar.js") }}"></script>
 
     <script>
-        (function ($) {
-            'use strict';
-            $.cookieBar({
-                fixed: true
-            });
-        })(window.jQuery);
-
-        $("#logout").on("click",function(){
-            $.ajax({
-                type:'POST',
-                url:'{{ route("logout") }}',
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                success:function(data){
-                    window.location = data
-                }
-            });
+        $(document).ready(function(){
+            (function ($) {
+                'use strict';
+                $.cookieBar({
+                    fixed: true
+                });
+            })(window.jQuery);
         })
+
     </script>
 @endsection
+
